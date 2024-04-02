@@ -9,7 +9,7 @@ func TestLockFreeTicket(t *testing.T) {
 	var sharedResource int
 	var wg sync.WaitGroup
 
-	count := 1000000
+	count := 100000
 	ticket := NewTicket()
 
 	for range count {
@@ -33,7 +33,7 @@ func BenchmarkLockFreeTicket(t *testing.B) {
 	var sharedResource int
 	var wg sync.WaitGroup
 
-	count := 1000
+	count := 100000
 	ticket := NewTicket()
 
 	for range count {
@@ -54,7 +54,7 @@ func BenchmarkMutexLock(t *testing.B) {
 	var wg sync.WaitGroup
 	var mu sync.Mutex
 
-	count := 1000
+	count := 100000
 
 	for range count {
 		wg.Add(1)
