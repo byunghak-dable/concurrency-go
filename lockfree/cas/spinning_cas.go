@@ -18,6 +18,7 @@ func newCas() *SpinningCas {
 
 func (t *SpinningCas) Lock() {
 	for !atomic.CompareAndSwapInt32(&t.state, free, 1) {
+		// Unlike mutex, other work can be done while waiting for lock to be free.
 		runtime.Gosched()
 	}
 }
