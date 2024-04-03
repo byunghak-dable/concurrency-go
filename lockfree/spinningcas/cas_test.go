@@ -1,4 +1,4 @@
-package ticket
+package spinningcas
 
 import (
 	"sync"
@@ -10,15 +10,15 @@ func TestLockFreeTicket(t *testing.T) {
 	var wg sync.WaitGroup
 
 	count := 100000
-	ticket := NewTicket()
+	cas := newCas()
 
 	for range count {
 		wg.Add(1)
 
 		go func() {
 			defer wg.Done()
-			ticket.Lock()
-			defer ticket.Unlock()
+			cas.Lock()
+			defer cas.Unlock()
 			sharedResource++
 		}()
 	}
@@ -29,32 +29,32 @@ func TestLockFreeTicket(t *testing.T) {
 	}
 }
 
-func BenchmarkLockFreeTicket(t *testing.B) {
+func BenchmarkSpinningCas(t *testing.B) {
 	var sharedResource int
 	var wg sync.WaitGroup
 
-	count := 100000
-	ticket := NewTicket()
+	count := 10000
+	cas := newCas()
 
 	for range count {
 		wg.Add(1)
 
 		go func() {
 			defer wg.Done()
-			ticket.Lock()
-			defer ticket.Unlock()
+			cas.Lock()
+			defer cas.Unlock()
 			sharedResource++
 		}()
 	}
 	wg.Wait()
 }
 
-func BenchmarkMutexLock(t *testing.B) {
+func BenchmarkMutex(t *testing.B) {
 	var sharedResource int
 	var wg sync.WaitGroup
 	var mu sync.Mutex
 
-	count := 100000
+	count := 10000
 
 	for range count {
 		wg.Add(1)
